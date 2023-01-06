@@ -19,14 +19,13 @@ public class UserEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotNull(message = "username can not be null")
+
   private String username;
 
-  @NotNull(message = "email can not be null")
+
   private String email;
 
-  @NotNull(message = "password can not be null")
-  @Size(min = 4, message = "password must be greater than 4 characters")
+
   private String password;
 
 

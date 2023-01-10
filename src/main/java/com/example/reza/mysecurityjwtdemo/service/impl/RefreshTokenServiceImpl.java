@@ -54,7 +54,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     RefreshTokenEntity newRefreshToken = createRefreshToken(userEntity.getId());
 
 
-    refreshTokenRepository.save(newRefreshToken);
+//    refreshTokenRepository.save(newRefreshToken);
 
     SigninResponse response = new SigninResponse();
     response.setToken(accessToken);

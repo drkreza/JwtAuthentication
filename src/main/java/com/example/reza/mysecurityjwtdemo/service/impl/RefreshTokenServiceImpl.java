@@ -3,6 +3,7 @@ package com.example.reza.mysecurityjwtdemo.service.impl;
 import com.example.reza.mysecurityjwtdemo.config.jwt.JwtUtils;
 import com.example.reza.mysecurityjwtdemo.config.security.CustomUserDetails;
 import com.example.reza.mysecurityjwtdemo.entity.RefreshTokenEntity;
+import com.example.reza.mysecurityjwtdemo.entity.UserEntity;
 import com.example.reza.mysecurityjwtdemo.payload.dto.response.SigninResponse;
 import com.example.reza.mysecurityjwtdemo.repository.RefreshTokenRepository;
 import com.example.reza.mysecurityjwtdemo.repository.UserRepository;
@@ -44,11 +45,20 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByToken(refreshToken).orElseThrow(() -> new RuntimeException("refresh token is not valid"));
 
-    String accessToken = jwtUtils.generateTokenFromUsername(refreshTokenEntity.getUserEntity().getUsername());
+    UserEntity userEntity = refreshTokenEntity.getUserEntity();
+
+    refreshTokenRepository.delete(refreshTokenEntity);
+
+    String accessToken = jwtUtils.generateTokenFromUsername(userEntity.getUsername());
+
+    RefreshTokenEntity newRefreshToken = createRefreshToken(userEntity.getId());
+
+
+    refreshTokenRepository.save(newRefreshToken);
 
     SigninResponse response = new SigninResponse();
     response.setToken(accessToken);
-    response.setRefreshToken(refreshToken);
+    response.setRefreshToken(newRefreshToken.getToken());
 
     /*CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     String accessToken = jwtUtils.generateTokenFromUsername(userDetails.getUsername());
